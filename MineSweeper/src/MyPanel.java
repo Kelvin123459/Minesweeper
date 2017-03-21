@@ -12,11 +12,16 @@ public class MyPanel extends JPanel {
 	private static final int INNER_CELL_SIZE = 29;
 	private static final int TOTAL_COLUMNS = 9;
 	private static final int TOTAL_ROWS = 9;   //Last row has only one cell
+	private static final int TOTAL_MINES = 10; //Amount of mines in a 9x9 grid
 	public int x = -1;
 	public int y = -1;
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
-	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
+	
+	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];	
+	public Boolean[][] mines = new Boolean [TOTAL_COLUMNS][TOTAL_ROWS]; //Determines if cell contains a mine
+	public Boolean[][] uncoveredCells = new Boolean [TOTAL_COLUMNS][TOTAL_ROWS];
+	
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
 		if (INNER_CELL_SIZE + (new Random()).nextInt(1) < 1) {	//Use of "random" to prevent unwanted Eclipse warning
 			throw new RuntimeException("INNER_CELL_SIZE must be positive!");
@@ -114,4 +119,19 @@ public class MyPanel extends JPanel {
 		}
 		return y;
 	}
+	public void generateMines(){
+		
+	}
+	public void gameOver()
+	{
+		for (int i=0; i<=TOTAL_COLUMNS; i++);{
+			for (int j=0; j<=TOTAL_ROWS; j++);{
+				if (mines[i][j]){
+					colorArray[i][j] = Color.BLACK;
+					repaint();
+				}
+			}
+		}
+	}
+	
 }
