@@ -258,8 +258,8 @@ public class MyPanel extends JPanel {
 	}
 	public void gameOver()
 	{
-		for (int i=0; i<=TOTAL_COLUMNS; i++){
-			for (int j=0; j<=TOTAL_ROWS; j++){
+		for (int i=0; i<TOTAL_COLUMNS; i++){
+			for (int j=0; j<TOTAL_ROWS; j++){
 				if (mines[i][j]){
 					colorArray[i][j] = Color.BLACK;
 					repaint();
