@@ -57,7 +57,7 @@ public class MyPanel extends JPanel {
 		int height = y2 - y1;
 
 		//Paint the background
-		g.setColor(Color.LIGHT_GRAY);
+		g.setColor(Color.GRAY);
 		g.fillRect(x1, y1, width + 1, height + 1);
 
 
@@ -178,8 +178,8 @@ public class MyPanel extends JPanel {
 					if (i >= 1 && j <= TOTAL_ROWS-2 && mines[i-1][j+1] == true) {
 						numAdjMines[i][j] =+ 1;
 					}
+					System.out.println(numAdjMines[i][j]);
 				}
-
 			}
 
 		}
@@ -267,5 +267,6 @@ public class MyPanel extends JPanel {
 			}
 		}
 	  JOptionPane.showMessageDialog(null, "GAME OVER!");
+	  System.exit(1);
 	}
 }
