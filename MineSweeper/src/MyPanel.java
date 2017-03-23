@@ -83,6 +83,54 @@ public class MyPanel extends JPanel {
 				}
 			}
 		}
+		//Draw numbers
+				int xPos;
+				int yPos;
+				int mineCounter;
+				for (int x = 0; x < TOTAL_COLUMNS; x++){
+					for (int y = 0; y < TOTAL_ROWS; y++){
+						mineCounter = 0;
+						if (!mines[x][y]){ //Cell is not a mine
+							for (int i = x-1; i <= x+1; i++){
+								for (int j = y-1; j <= y+1; j++){
+									if ( i < 0 || i > TOTAL_COLUMNS-1 || j < 0 || j >TOTAL_ROWS-3){
+										//Do nothing: out of colorArray bounds
+									} else if (mines[i][j]){
+										mineCounter++;
+									}
+								}
+							}
+							xPos = x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 12;
+							yPos =  y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 20;
+							g.setColor(Color.WHITE);
+							switch (mineCounter) {
+							case 1:
+								g.drawString("1", xPos, yPos);
+								break;
+							case 2:
+								g.drawString("2", xPos, yPos);
+								break;
+							case 3:
+								g.drawString("3", xPos, yPos);
+								break;
+							case 4:
+								g.drawString("4",xPos, yPos);
+								break;
+							case 5:
+								g.drawString("5",xPos, yPos);
+								break;
+							case 6:
+								g.drawString("6", xPos, yPos);
+								break;
+							case 7:
+								g.drawString("7", xPos, yPos);
+								break;
+							default:
+								break;
+							}
+						}
+					}
+				}
 	}
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();
@@ -140,7 +188,7 @@ public class MyPanel extends JPanel {
 		int setMines = 0;
 		while (setMines < TOTAL_MINES){
 			xMine = mineGen.nextInt(TOTAL_COLUMNS);
-			yMine = mineGen.nextInt(TOTAL_ROWS);
+			yMine = mineGen.nextInt(TOTAL_ROWS-1);
 			if (!mines[xMine][yMine]){
 				setMines++;
 				mines[xMine][yMine]=true;
@@ -178,10 +226,8 @@ public class MyPanel extends JPanel {
 					if (i >= 1 && j <= TOTAL_ROWS-2 && mines[i-1][j+1] == true) {
 						numAdjMines[i][j] =+ 1;
 					}
-					System.out.println(numAdjMines[i][j]);
 				}
 			}
-
 		}
 	}
 	public void paintNearCells(int i, int j) {
@@ -238,10 +284,11 @@ public class MyPanel extends JPanel {
 			}
 		}
 	}
+	
 	public void gameWon(){
 		int uncoveredTiles = 0;
 		for (int i = 0; i<TOTAL_COLUMNS;i++){
-			for (int j = 0; j<TOTAL_ROWS; j++){
+			for (int j = 0; j<TOTAL_ROWS-1; j++){
 				if(!mines[i][j]){
 					if(!uncoveredCells[i][j]){
 						break;
@@ -252,14 +299,15 @@ public class MyPanel extends JPanel {
 				}
 			}
 		}
-		if (uncoveredTiles == ((TOTAL_COLUMNS*TOTAL_ROWS)-TOTAL_MINES)){
+		if (uncoveredTiles == ((TOTAL_COLUMNS*(TOTAL_ROWS-1))-TOTAL_MINES)){
 			JOptionPane.showMessageDialog(null, "CONGRATULATIONS!");
+			System.exit(0);
 		}
 	}
 	public void gameOver()
 	{
 		for (int i=0; i<TOTAL_COLUMNS; i++){
-			for (int j=0; j<TOTAL_ROWS; j++){
+			for (int j=0; j<(TOTAL_ROWS-1); j++){
 				if (mines[i][j]){
 					colorArray[i][j] = Color.BLACK;
 					repaint();
