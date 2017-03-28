@@ -1,3 +1,5 @@
+/*Minesweeper - Assigment 1 - ICOM4015
+  By Kelvin García & Luis M. Cintrón*/
 import javax.swing.JFrame;
 
 public class Main {
