@@ -91,10 +91,16 @@ public class MyMouseAdapter extends MouseAdapter {
 					//Is releasing outside
 					//Do nothing
 				} else {
+					
 					if ((myPanel.mouseDownGridX != gridX) || (myPanel.mouseDownGridY != gridY)) {
 						//Released the mouse button on a different cell where it was pressed
 						//Do nothing
 					} else {
+						
+						if(myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY].equals(Color.LIGHT_GRAY)){
+							//Here the color will stay red and will not change
+							break;
+						}
 						if(myPanel.colorArray[myPanel.mouseDownGridX][myPanel.mouseDownGridY].equals(Color.RED)){
 							//Here the color will stay red and will not change
 							break;

@@ -11,7 +11,7 @@ public class MyPanel extends JPanel {
 	private static final int GRID_Y = 25;
 	private static final int INNER_CELL_SIZE = 29;
 	private static final int TOTAL_COLUMNS = 9;
-	private static final int TOTAL_ROWS = 10;   //Last row has only one cell
+	private static final int TOTAL_ROWS = 9;   //Last row has only one cell
 	private static final int TOTAL_MINES = 10; //Amount of mines in a 9x9 grid
 	private Random mineGen = new Random();
 
@@ -55,26 +55,31 @@ public class MyPanel extends JPanel {
 		int y2 = getHeight() - myInsets.bottom - 1;
 		int width = x2 - x1;
 		int height = y2 - y1;
-
+		// Variables used to generate numbers inside of cells
+		
+		int xPos;
+		int yPos;
+		int numMines;
+		
 		//Paint the background
 		g.setColor(Color.GRAY);
 		g.fillRect(x1, y1, width + 1, height + 1);
 
 
 		g.setColor(Color.BLACK);
-		for (int y = 0; y <= TOTAL_ROWS-1; y++) {
+		for (int y = 0; y <= TOTAL_ROWS; y++) {
 			g.drawLine(x1 + GRID_X, y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)), x1 + GRID_X + ((INNER_CELL_SIZE + 1) * TOTAL_COLUMNS), y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)));
 		}
 		for (int x = 0; x <= TOTAL_COLUMNS; x++) {
 
-			g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y + ((INNER_CELL_SIZE + 1) * (TOTAL_ROWS-1 )));
+			g.drawLine(x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y, x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)), y1 + GRID_Y + ((INNER_CELL_SIZE + 1) * (TOTAL_ROWS)));
 
 		}
 
 		//Paint cell colors
 		for (int x = 0; x < TOTAL_COLUMNS; x++) {
 
-			for (int y = 0; y < TOTAL_ROWS-1; y++) {
+			for (int y = 0; y < TOTAL_ROWS; y++) {
 
 				{
 					Color c = colorArray[x][y];
@@ -83,55 +88,60 @@ public class MyPanel extends JPanel {
 				}
 			}
 		}
-		//Draw numbers
-				int xPos;
-				int yPos;
-				int mineCounter;
-				for (int x = 0; x < TOTAL_COLUMNS; x++){
-					for (int y = 0; y < TOTAL_ROWS; y++){
-						mineCounter = 0;
-						if (!mines[x][y]){ //Cell is not a mine
-							for (int i = x-1; i <= x+1; i++){
-								for (int j = y-1; j <= y+1; j++){
-									if ( i < 0 || i > TOTAL_COLUMNS-1 || j < 0 || j >TOTAL_ROWS-3){
-										//Do nothing: out of colorArray bounds
-									} else if (mines[i][j]){
-										mineCounter++;
-									}
-								}
-							}
-							xPos = x1 + GRID_X + (x * (INNER_CELL_SIZE + 1)) + 12;
-							yPos =  y1 + GRID_Y + (y * (INNER_CELL_SIZE + 1)) + 20;
-							g.setColor(Color.WHITE);
-							switch (mineCounter) {
-							case 1:
-								g.drawString("1", xPos, yPos);
-								break;
-							case 2:
-								g.drawString("2", xPos, yPos);
-								break;
-							case 3:
-								g.drawString("3", xPos, yPos);
-								break;
-							case 4:
-								g.drawString("4",xPos, yPos);
-								break;
-							case 5:
-								g.drawString("5",xPos, yPos);
-								break;
-							case 6:
-								g.drawString("6", xPos, yPos);
-								break;
-							case 7:
-								g.drawString("7", xPos, yPos);
-								break;
-							default:
-								break;
+		
+		// Loop used to find the cells around the clicked cell and find if there is a mine closed by
+		
+		for (int x = 0; x < TOTAL_COLUMNS; x++){
+			for (int y = 0; y < TOTAL_ROWS; y++){
+				numMines = 0;
+				if (!mines[x][y]){ //Cell is not a mine
+					for (int i = x-1; i <= x+1; i++){
+						for (int j = y-1; j <= y+1; j++){
+
+
+							if ( i < 0 || i > TOTAL_COLUMNS-1 || j < 0 || j >TOTAL_ROWS-1){
+								//Do nothing: out of colorArray bounds
+
+							} else if (mines[i][j]){
+								numMines++;
 							}
 						}
 					}
+				// Draws a number in a cell that is near a mine  8x8 around the cells
+					
+					xPos = x1 + GRID_X + (x * (INNER_CELL_SIZE )) + 10;
+					yPos =  y1 + GRID_Y + (y * (INNER_CELL_SIZE )) + 20;
+					g.setColor(Color.WHITE);
+					switch (numMines) {
+					case 1:
+						g.drawString("1", xPos, yPos);
+						break;
+					case 2:
+						g.drawString("2", xPos, yPos);
+						break;
+					case 3:
+						g.drawString("3", xPos, yPos);
+						break;
+					case 4:
+						g.drawString("4",xPos, yPos);
+						break;
+					case 5:
+						g.drawString("5",xPos, yPos);
+						break;
+					case 6:
+						g.drawString("6", xPos, yPos);
+						break;
+					case 7:
+						g.drawString("7", xPos, yPos);
+						break;
+					default:
+						break;
+					}
 				}
+			}
+		}
 	}
+	
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();
 		int x1 = myInsets.left;
@@ -149,7 +159,7 @@ public class MyPanel extends JPanel {
 		}
 		x = x / (INNER_CELL_SIZE + 1);
 		y = y / (INNER_CELL_SIZE + 1);
-		if (x < 0 || x > TOTAL_COLUMNS|| y < 0 || y > TOTAL_ROWS) {   //Outside the rest of the grid
+		if (x < 0 || x > TOTAL_COLUMNS|| y < 0 || y > TOTAL_ROWS+1) {   //Outside the rest of the grid
 			return -1;
 		}
 		return x;
@@ -171,7 +181,7 @@ public class MyPanel extends JPanel {
 		}
 		x = x / (INNER_CELL_SIZE + 1);
 		y = y / (INNER_CELL_SIZE + 1);
-		if (x < 0 || x > TOTAL_COLUMNS|| y < 0 || y > TOTAL_ROWS) {   //Outside the rest of the grid
+		if (x < 0 || x > TOTAL_COLUMNS|| y < 0 || y > TOTAL_ROWS+1) {   //Outside the rest of the grid
 			return -1;
 		}
 		return y;
@@ -188,7 +198,7 @@ public class MyPanel extends JPanel {
 		int setMines = 0;
 		while (setMines < TOTAL_MINES){
 			xMine = mineGen.nextInt(TOTAL_COLUMNS);
-			yMine = mineGen.nextInt(TOTAL_ROWS-1);
+			yMine = mineGen.nextInt(TOTAL_ROWS);
 			if (!mines[xMine][yMine]){
 				setMines++;
 				mines[xMine][yMine]=true;
@@ -200,32 +210,34 @@ public class MyPanel extends JPanel {
 	public void minePos(){
 		for(int i = 0; i<TOTAL_COLUMNS; i++){
 			for(int j = 0; j < TOTAL_ROWS; j ++){
-				if(!mines[i][j]){//There is no mine on the cell, the number will be assigned to the numadjmine
-					if( j >= 1 && mines[i][j-1]== true){
+				if(!this.mines[i][j])//There is no mine on the cell, the number will be assigned to the numadjmine
+				{
+					if( j >= 1 && this.mines[i][j-1]== true){
 						numAdjMines[i][j]=+1;
 					}
-					if (j < TOTAL_ROWS-2 && mines[i][j+1] == true){
+					if (j < TOTAL_ROWS-2 && this.mines[i][j+1] == true){
 						numAdjMines[i][j+1]=+1;
 					}
-					if(i>= 1 && mines[i-1][j]==true){
+					if(i>= 1 && this.mines[i-1][j]==true){
 						numAdjMines[i][j]=+1;
 					}
-					if(i< TOTAL_COLUMNS-2 && mines[i+1][j]==true){
+					if(i< TOTAL_COLUMNS-2 && this.mines[i+1][j]==true){
 						numAdjMines[i+1][j]=+1;
 					}
 
-					if((i>= 0 && j >=0)&& mines[i-1][j-1]== true){
+					if((i>= 0 && j >=0)&& this.mines[i-1][j-1]== true){
 						numAdjMines[i][j]+=1;
 					}
-					if (i <= TOTAL_COLUMNS-2 && j >= 1 && mines[i+1][j-1] == true) {
+					if (i <= TOTAL_COLUMNS-2 && j >= 1 && this.mines[i+1][j-1] == true) {
 						numAdjMines[i][j] =+ 1;
 					}
-					if (i <= TOTAL_COLUMNS-2 && j <= TOTAL_ROWS-2 && mines[i+1][j+1] == true){ 
+					if (i <= TOTAL_COLUMNS-2 && j <= TOTAL_ROWS-2 && this.mines[i+1][j+1] == true){ 
 						numAdjMines[i][j] =+ 1;
 					}
-					if (i >= 1 && j <= TOTAL_ROWS-2 && mines[i-1][j+1] == true) {
+					if (i >= 1 && j <= TOTAL_ROWS-2 && this.mines[i-1][j+1] == true) {
 						numAdjMines[i][j] =+ 1;
 					}
+
 				}
 			}
 		}
@@ -233,63 +245,63 @@ public class MyPanel extends JPanel {
 	public void paintNearCells(int i, int j) {
 		i = mouseDownGridX;
 		j = mouseDownGridY;
-		if (!mines[i][j]){
+		if (!this.mines[i][j]){
 			if (j>=1 && (numAdjMines[i][j-1]==0)){
-				if (!mines[i][j-1]){
+				if (!this.mines[i][j-1]){
 					colorArray[i][j-1]=Color.LIGHT_GRAY;
 					uncoveredCells[i][j-1]= true;
 				}
 			}
 			if (j <= TOTAL_ROWS-2 && (numAdjMines[i][j+1] == 0)) {
-				if (!mines[i][j+1]) { 
+				if (!this.mines[i][j+1]) { 
 					colorArray[i][j+1] = Color.LIGHT_GRAY;
 					uncoveredCells[i][j+1]  = true;
 				}
 			}
 			if (i >= 1 && (numAdjMines[i-1][j] == 0)) {
-				if (!mines[i-1][j]) { 
+				if (!this.mines[i-1][j]) { 
 					colorArray[i-1][j] = Color.LIGHT_GRAY;
 					uncoveredCells[i-1][j]  = true;
 				}
 			}
 			if (i <=  TOTAL_COLUMNS-2 && (numAdjMines[i+1][j] == 0)) {
-				if (!mines[i+1][j]) { 
+				if (!this.mines[i+1][j]) { 
 					colorArray[i+1][j] = Color.LIGHT_GRAY;
 					uncoveredCells[i+1][j]  = true;
 				}
 			}
 			if (i >= 1 && j >= 1 && (numAdjMines[i-1][j-1] == 0)) { 
-				if (!mines[i-1][j-1]) { 
+				if (!this.mines[i-1][j-1]) { 
 					colorArray[i-1][j-1] = Color.LIGHT_GRAY;
 					uncoveredCells[i-1][j-1]  = true;
 				}
 			}
 			if (i <= TOTAL_COLUMNS-2 && j >= 1 && (numAdjMines[i+1][j-1] == 0)) {
-				if (!mines[i+1][j-1]) { 
+				if (!this.mines[i+1][j-1]) { 
 					colorArray[i+1][j-1] = Color.LIGHT_GRAY;
 					uncoveredCells[i+1][j-1]  = true;
 				}
 			}
 			if (i <= TOTAL_COLUMNS-2 && j <= TOTAL_ROWS-2 && (numAdjMines[i+1][j+1] == 0)) {
-				if (!mines[i+1][j+1]) { 
+				if (!this.mines[i+1][j+1]) { 
 					colorArray[i+1][j+1] = Color.LIGHT_GRAY;
 					uncoveredCells[i+1][j+1]  = true;
 				}
 			}
 			if (i >= 1 && j <= TOTAL_ROWS-2 && (numAdjMines[i-1][j+1] == 0)) {
-				if (!mines[i-1][j+1]) { 
+				if (!this.mines[i-1][j+1]) { 
 					colorArray[i-1][j+1] = Color.LIGHT_GRAY;
 					uncoveredCells[i-1][j+1]  = true;
 				}
 			}
 		}
 	}
-	
+
 	public void gameWon(){
 		int uncoveredTiles = 0;
 		for (int i = 0; i<TOTAL_COLUMNS;i++){
-			for (int j = 0; j<TOTAL_ROWS-1; j++){
-				if(!mines[i][j]){
+			for (int j = 0; j<TOTAL_ROWS; j++){
+				if(!this.mines[i][j]){
 					if(!uncoveredCells[i][j]){
 						break;
 					}
@@ -299,7 +311,7 @@ public class MyPanel extends JPanel {
 				}
 			}
 		}
-		if (uncoveredTiles == ((TOTAL_COLUMNS*(TOTAL_ROWS-1))-TOTAL_MINES)){
+		if (uncoveredTiles == ((TOTAL_COLUMNS*(TOTAL_ROWS))-TOTAL_MINES)){
 			JOptionPane.showMessageDialog(null, "CONGRATULATIONS!");
 			System.exit(0);
 		}
@@ -307,14 +319,14 @@ public class MyPanel extends JPanel {
 	public void gameOver()
 	{
 		for (int i=0; i<TOTAL_COLUMNS; i++){
-			for (int j=0; j<(TOTAL_ROWS-1); j++){
-				if (mines[i][j]){
+			for (int j=0; j<(TOTAL_ROWS); j++){
+				if (this.mines[i][j]){
 					colorArray[i][j] = Color.BLACK;
 					repaint();
 				}
 			}
 		}
-	  JOptionPane.showMessageDialog(null, "GAME OVER!");
-	  System.exit(1);
+		JOptionPane.showMessageDialog(null, "GAME OVER!");
+		System.exit(1);
 	}
 }
